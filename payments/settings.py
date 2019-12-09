@@ -113,7 +113,7 @@ PAYTM_MERCHANT_ID = "kllrJF29732196755225"
 HOST_URL ='https://djangopaytm.herokuapp.com'
 #For local Setup
 # HOST_URL = "http://localhost:8080"
-PAYTM_CALLBACK_URL = "/paytm/response/"
+PAYTM_CALLBACK_URL = "https://djangopaytm.herokuapp.com/paytm/response/"
 
 if DEBUG:
     PAYTM_MERCHANT_KEY = "B!Kt8E!uJRBKWm3d"
@@ -121,12 +121,15 @@ if DEBUG:
     PAYTM_WEBSITE = 'WEBSTAGING'
     #For online Heroku Setup
     HOST_URL ='https://djangopaytm.herokuapp.com'
+    #Heroku callback url
+    PAYTM_CALLBACK_URL = "https://djangopaytm.herokuapp.com/paytm/response/"
     #For local Setup
     # HOST_URL = 'http://localhost:8000'
     '''
     In sandbox enviornment you can use following wallet credentials to login and make payment.
     Mobile Number : 7777777777
     Password : Paytm12345
+    OTP : 489871
     This test wallet is topped-up to a balance of 7000 Rs. every 5 minutes.
     '''
 django_heroku.settings(locals())

@@ -20,7 +20,7 @@ def payment(request):
     MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
     MERCHANT_ID = settings.PAYTM_MERCHANT_ID
     get_lang = "/" + get_language() if get_language() else ''
-    CALLBACK_URL = settings.HOST_URL + get_lang + settings.PAYTM_CALLBACK_URL
+    CALLBACK_URL = settings.PAYTM_CALLBACK_URL
     # Generating unique temporary ids
     order_id = Checksum.__id_generator__()
 
@@ -30,11 +30,11 @@ def payment(request):
                     'MID':MERCHANT_ID,
                     'ORDER_ID':order_id,
                     'TXN_AMOUNT': bill_amount,
-                    'CUST_ID':'harish@pickrr.com',
+                    'CUST_ID':'jetso@gmail.com',
                     'INDUSTRY_TYPE_ID':'Retail',
                     'WEBSITE': settings.PAYTM_WEBSITE,
                     'CHANNEL_ID':'WEB',
-                    #'CALLBACK_URL':CALLBACK_URL,
+                    'CALLBACK_URL':CALLBACK_URL,
                 }
         param_dict = data_dict
         param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
