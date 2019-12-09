@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+#Add heroku support
 import django_heroku
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -108,14 +109,20 @@ STATIC_URL = '/static/'
 
 PAYTM_MERCHANT_KEY = "B!Kt8E!uJRBKWm3d"
 PAYTM_MERCHANT_ID = "kllrJF29732196755225"
-HOST_URL = "http://localhost:8080"
+#For online Heroku Setup
+HOST_URL ='https://djangopaytm.herokuapp.com'
+#For local Setup
+# HOST_URL = "http://localhost:8080"
 PAYTM_CALLBACK_URL = "/paytm/response/"
 
 if DEBUG:
     PAYTM_MERCHANT_KEY = "B!Kt8E!uJRBKWm3d"
     PAYTM_MERCHANT_ID = "kllrJF29732196755225"
     PAYTM_WEBSITE = 'WEBSTAGING'
-    HOST_URL = 'http://localhost:8000'
+    #For online Heroku Setup
+    HOST_URL ='https://djangopaytm.herokuapp.com'
+    #For local Setup
+    # HOST_URL = 'http://localhost:8000'
     '''
     In sandbox enviornment you can use following wallet credentials to login and make payment.
     Mobile Number : 7777777777
