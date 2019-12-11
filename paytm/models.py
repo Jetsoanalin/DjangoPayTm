@@ -6,8 +6,8 @@ from django.utils import timezone
 
 class PaytmHistory(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='rel_payment_paytm')
-    ORDERID = models.CharField('ORDER ID', max_length=30)
-    TXNDATE = models.DateTimeField('TXN DATE', default=timezone.now)
+    ORDERID = models.CharField('ORDER ID', max_length=50)
+    TXNDATE = models.CharField('TXN DATE', default=timezone.now,max_length=50)
     # TXNID = models.PositiveBigIntegerField('TXN ID')
     TXNID = models.CharField('TXN ID',max_length=10, validators=[RegexValidator(r'^\d{1,10}$')])
     BANKTXNID = models.IntegerField('BANK TXN ID', null=True, blank=True)
