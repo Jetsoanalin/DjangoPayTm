@@ -43,7 +43,7 @@ python3 manage.py createsuperuser
 
 * Now in terminal run the server and go to http://localhost:8000/admin/
 ```
-python manange.py runserver
+python3 manange.py runserver
 ```
 
 *Go to
