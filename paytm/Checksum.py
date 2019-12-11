@@ -83,12 +83,10 @@ def __id_generator__(size=6, chars=string.ascii_uppercase + string.digits + stri
 def __get_param_string__(params):
     params_string = []
     for key in sorted(params.keys()):
-        if("REFUND" in params[key] or "|" in params[key]):
-            respons_dict = {}
-            exit()
         value = params[key]
         params_string.append('' if value == 'null' else str(value))
     return '|'.join(params_string)
+
 
 
 __pad__ = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
@@ -99,8 +97,8 @@ def __encode__(to_encode, iv, key):
     # Pad
     to_encode = __pad__(to_encode)
     # Encrypt
-    c = AES.new(key, AES.MODE_CBC, iv)
-    to_encode = c.encrypt(to_encode)
+    c = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))
+    to_encode = c.encrypt(to_encode.encode('utf-8'))
     # Encode
     to_encode = base64.b64encode(to_encode)
     return to_encode.decode("UTF-8")
@@ -110,7 +108,7 @@ def __decode__(to_decode, iv, key):
     # Decode
     to_decode = base64.b64decode(to_decode)
     # Decrypt
-    c = AES.new(key, AES.MODE_CBC, iv)
+    c = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))
     to_decode = c.decrypt(to_decode)
     if type(to_decode) == bytes:
         # convert bytes array to str.

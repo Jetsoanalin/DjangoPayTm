@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from . import Checksum
+from paytm import Checksum
 
 
 from paytm.models import PaytmHistory

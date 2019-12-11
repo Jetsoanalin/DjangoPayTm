@@ -111,20 +111,24 @@ PAYTM_MERCHANT_KEY = "B!Kt8E!uJRBKWm3d"
 PAYTM_MERCHANT_ID = "kllrJF29732196755225"
 #For online Heroku Setup
 HOST_URL ='https://djangopaytm.herokuapp.com'
-#For local Setup
-# HOST_URL = "http://localhost:8080"
 PAYTM_CALLBACK_URL = "https://djangopaytm.herokuapp.com/paytm/response/"
+
+#For local Setup
+HOST_URL = "http://localhost:8080"
+PAYTM_CALLBACK_URL = "http://localhost:8080/paytm/response/"
+
 
 if DEBUG:
     PAYTM_MERCHANT_KEY = "B!Kt8E!uJRBKWm3d"
     PAYTM_MERCHANT_ID = "kllrJF29732196755225"
     PAYTM_WEBSITE = 'WEBSTAGING'
     #For online Heroku Setup
-    HOST_URL ='https://djangopaytm.herokuapp.com'
+    # HOST_URL ='https://djangopaytm.herokuapp.com'
     #Heroku callback url
-    PAYTM_CALLBACK_URL = "https://djangopaytm.herokuapp.com/paytm/response/"
+    # PAYTM_CALLBACK_URL = "https://djangopaytm.herokuapp.com/paytm/response/"
     #For local Setup
-    # HOST_URL = 'http://localhost:8000'
+    HOST_URL = 'http://localhost:8000'
+    PAYTM_CALLBACK_URL = "http://localhost:8000/paytm/response/"
     '''
     In sandbox enviornment you can use following wallet credentials to login and make payment.
     Mobile Number : 7777777777
