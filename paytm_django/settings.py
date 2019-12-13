@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -127,7 +128,9 @@ PAYTM_MERCHANT_KEY = '' # < your production KEY >
 PAYTM_MERCHANT_ID = '' # < your production ID >
 PAYTM_WEBSITE = 'DEFAULT'
 PAYTM_URL = 'https://securegw.paytm.in/theia/processTransaction'
-HOST_URL = 'http://127.0.0.1:8001/'
+# HOST_URL = 'http://127.0.0.1:8001/'
+# Heroku Config
+HOST_URL = 'https://djangopaytm.herokuapp.com'
 PAYTM_CALLBACK_URL = "response/"
 
 if DEBUG:
@@ -166,3 +169,5 @@ if DEBUG:
 # SECURE_HSTS_SECONDS             = None
 # SECURE_HSTS_INCLUDE_SUBDOMAINS  = False
 # SECURE_FRAME_DENY               = False
+
+django_heroku.settings(locals())
