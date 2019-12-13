@@ -1,4 +1,4 @@
-#!/home/jetso/Downloads/paytm-django-master/payments/env/bin/python3
+#!/home/jetso/Downloads/paytm_django-master/env/bin/python3
 from django.core import management
 
 if __name__ == "__main__":

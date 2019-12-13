@@ -1,9 +1,9 @@
-from django.conf.urls import include, url
-
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    # Examples:
-    url(r'^$', 'paytm.views.home', name='home'),
-    url(r'^payment/', 'paytm.views.payment', name='payment'),
-    url(r'^response/', 'paytm.views.response', name='response'),
+    path('', views.start_payment, name='start_payment'),
+    path('payment/', views.payment, name='payment'),
+    path('response/', views.response, name='response'),
+
 ]

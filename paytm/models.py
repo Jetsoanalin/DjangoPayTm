@@ -1,16 +1,14 @@
 from django.db import models
 from django.conf import settings
-from django.core.validators import RegexValidator
 from django.utils import timezone
-# Create your models here.
 
-class PaytmHistory(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='rel_payment_paytm')
-    ORDERID = models.CharField('ORDER ID', max_length=50)
-    TXNDATE = models.CharField('TXN DATE', default=timezone.now,max_length=50)
-    # TXNID = models.PositiveBigIntegerField('TXN ID')
-    TXNID = models.CharField('TXN ID',max_length=10, validators=[RegexValidator(r'^\d{1,10}$')])
-    BANKTXNID = models.IntegerField('BANK TXN ID', null=True, blank=True)
+class Paytm_history(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='rel_payment_paytm', on_delete=models.CASCADE, null=True, default=None)
+    MERC_UNQ_REF = models.IntegerField('USER ID')
+    ORDERID = models.CharField('ORDER ID', max_length=30)
+    TXNDATE = models.DateTimeField('TXN DATE', default=timezone.now)
+    TXNID = models.CharField('TXN ID', max_length=100)
+    BANKTXNID = models.CharField('BANK TXN ID', max_length=100, null=True, blank=True)
     BANKNAME = models.CharField('BANK NAME', max_length=50, null=True, blank=True)
     RESPCODE = models.IntegerField('RESP CODE')
     PAYMENTMODE = models.CharField('PAYMENT MODE', max_length=10, null=True, blank=True)
@@ -21,8 +19,18 @@ class PaytmHistory(models.Model):
     TXNAMOUNT = models.FloatField('TXN AMOUNT')
     STATUS = models.CharField('STATUS', max_length=12)
 
-    class Meta:
-        app_label = 'paytm'
+    # class Meta:
+    #     app_label = 'paytm'
+
+    def __str__(self):
+        return '%s  (%s)' % (self.user.username ,self.pk)
+
 
     def __unicode__(self):
         return self.STATUS
+
+
+    def __iter__(self):
+        for field_name in [f.name for f in self._meta.get_fields()]:
+            value = getattr(self, field_name, None)
+            yield (field_name, value)

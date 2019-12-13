@@ -1,4 +1,4 @@
-#!/home/jetso/Downloads/paytm-django-master/payments/env/bin/python3
+#!/home/jetso/Downloads/paytm_django-master/env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

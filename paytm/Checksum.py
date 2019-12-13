@@ -23,7 +23,7 @@ def generate_checksum(param_dict, merchant_key, salt=None):
     return __encode__(hash_string, IV, merchant_key)
 
 def generate_refund_checksum(param_dict, merchant_key, salt=None):
-    for i in param_dict:    
+    for i in param_dict:
         if("|" in param_dict[i]):
             param_dict = {}
             exit()
@@ -83,10 +83,12 @@ def __id_generator__(size=6, chars=string.ascii_uppercase + string.digits + stri
 def __get_param_string__(params):
     params_string = []
     for key in sorted(params.keys()):
+        if("REFUND" in str(params[key]) or "|" in str(params[key])):
+            respons_dict = {}
+            exit()
         value = params[key]
         params_string.append('' if value == 'null' else str(value))
     return '|'.join(params_string)
-
 
 
 __pad__ = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
@@ -94,11 +96,15 @@ __unpad__ = lambda s: s[0:-ord(s[-1])]
 
 
 def __encode__(to_encode, iv, key):
+    # to_encode = to_encode.encode("UTF-8")
+    # iv = iv.encode("UTF-8")
+    # key = key.encode("UTF-8")
+
     # Pad
     to_encode = __pad__(to_encode)
     # Encrypt
-    c = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))
-    to_encode = c.encrypt(to_encode.encode('utf-8'))
+    c = AES.new(key.encode('UTF-8'), AES.MODE_CBC, iv.encode('UTF-8'))
+    to_encode = c.encrypt(to_encode.encode('UTF-8'))
     # Encode
     to_encode = base64.b64encode(to_encode)
     return to_encode.decode("UTF-8")
@@ -108,7 +114,7 @@ def __decode__(to_decode, iv, key):
     # Decode
     to_decode = base64.b64decode(to_decode)
     # Decrypt
-    c = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))
+    c = AES.new(key.encode('UTF-8'), AES.MODE_CBC, iv.encode('UTF-8'))
     to_decode = c.decrypt(to_decode)
     if type(to_decode) == bytes:
         # convert bytes array to str.
@@ -119,11 +125,17 @@ def __decode__(to_decode, iv, key):
 
 if __name__ == "__main__":
     params = {
-        "MID": "kllrJF29732196755225",
-        "ORDER_ID": "1",
-        "CUST_ID": "1",
-        "TXN_AMOUNT": "100",
+        "MID": "mid",
+        "ORDER_ID": "order_id",
+        "CUST_ID": "cust_id",
+        "TXN_AMOUNT": "1",
         "CHANNEL_ID": "WEB",
         "INDUSTRY_TYPE_ID": "Retail",
         "WEBSITE": "WEBSTAGING"
     }
+
+    # print(verify_checksum(
+    #     params, 'xxxxxxxxxxxxxxxx',
+    #     "CD5ndX8VVjlzjWbbYoAtKQIlvtXPypQYOg0Fi2AUYKXZA5XSHiRF0FDj7vQu66S8MHx9NaDZ/uYm3WBOWHf+sDQAmTyxqUipA7i1nILlxrk="))
+
+    # print(generate_checksum(params, "xxxxxxxxxxxxxxxx"))

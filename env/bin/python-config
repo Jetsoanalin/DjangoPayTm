@@ -1,4 +1,4 @@
-#!/home/jetso/Downloads/paytm-django-master/payments/env/bin/python
+#!/home/jetso/Downloads/paytm_django-master/env/bin/python
 
 import sys
 import getopt

@@ -1,58 +1,77 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.utils.translation import get_language
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from . import Checksum
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from .models import Paytm_history
 
-from paytm import Checksum
 
-
-from paytm.models import PaytmHistory
-# Create your views here.
 
 @login_required
-def home(request):
-    return HttpResponse("<html><a href='"+ settings.HOST_URL +"/paytm/payment'>PayNow</html>")
+def start_payment(request):
+
+    return render(request, 'paytm/start_payment.html')
 
 
+@csrf_exempt
+@login_required
 def payment(request):
+    user = request.user
     MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
     MERCHANT_ID = settings.PAYTM_MERCHANT_ID
-    get_lang = "/" + get_language() if get_language() else ''
-    CALLBACK_URL = settings.PAYTM_CALLBACK_URL
-    # Generating unique temporary ids
-    order_id = Checksum.__id_generator__()
+    CALLBACK_URL = settings.HOST_URL + settings.PAYTM_CALLBACK_URL
+    PAYTM_URL = settings.PAYTM_URL
+    order_id = Checksum.__id_generator__()     # Generating unique temporary id
+    cust_id = user.username
+    bill = 1                                   #Amount in INR payable by customer.
+    mobile_no = '0987654321'                   #Customer's mobile number. Passing this enables faster login.
+    email = user.email                         #Customer's email ID
 
-    bill_amount = 100
-    if bill_amount:
-        data_dict = {
-                    'MID':MERCHANT_ID,
-                    'ORDER_ID':order_id,
-                    'TXN_AMOUNT': bill_amount,
-                    'CUST_ID':'jetso@gmail.com',
-                    'INDUSTRY_TYPE_ID':'Retail',
-                    'WEBSITE': settings.PAYTM_WEBSITE,
-                    'CHANNEL_ID':'WEB',
-                    'CALLBACK_URL':CALLBACK_URL,
-                }
-        param_dict = data_dict
-        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
-        return render(request,"payment.html",{'paytmdict':param_dict})
-    return HttpResponse("Bill Amount Could not find. ?bill_amount=10")
+    send_data = {
+                'MID':MERCHANT_ID,
+                'ORDER_ID':order_id,
+                'CUST_ID': cust_id,
+                'TXN_AMOUNT': bill,
+                'CHANNEL_ID':'WEB',
+                'WEBSITE': settings.PAYTM_WEBSITE,
+                'MOBILE_NO': mobile_no,            #optional
+                'EMAIL': email,                    #optional
+                'INDUSTRY_TYPE_ID':'Retail',
+                'CALLBACK_URL':CALLBACK_URL,
+                'MERC_UNQ_REF':user.id,               #used to save data in response
+                # 'PAYMENT_MODE_ONLY':,               #optional
+                # 'AUTH_MODE':,                       #optional
+                # 'PAYMENT_TYPE_ID':,                 #optional
+                # 'BANK_CODE':,                       #optional
+                # see documentation https://developer.paytm.com/docs/v1/payment-gateway
+            }
+    paytm_data = send_data
+    paytm_data['CHECKSUMHASH'] = Checksum.generate_checksum(send_data, MERCHANT_KEY)
+    return render(request,"paytm/payment.html",{'paytmdict':paytm_data, 'user': user, 'paytmurl' :PAYTM_URL})
 
 
 @csrf_exempt
 def response(request):
     if request.method == "POST":
+        user = request.user
         MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
         data_dict = {}
-        for key in request.POST:
-            data_dict[key] = request.POST[key]
-        verify = Checksum.verify_checksum(data_dict, MERCHANT_KEY, data_dict['CHECKSUMHASH'])
+        data_dict = dict(request.POST.items())
+
+        verify = Checksum.verify_checksum(data_dict, MERCHANT_KEY, data_dict['CHECKSUMHASH'])             #verifing checksum
         if verify:
-            PaytmHistory.objects.create(user=request.user, **data_dict)
-            return render(request,"response.html",{"paytm":data_dict})
+            for key in request.POST:                                                                      #converting string to float
+                if key == "BANKTXNID" or key == "RESPCODE":
+                    if request.POST[key]:
+                        data_dict[key] = int(request.POST[key])
+                    else:
+                        data_dict[key] = 0
+                elif key == "TXNAMOUNT":
+                    data_dict[key] = float(request.POST[key])
+            Paytm_history.objects.create(user_id = data_dict['MERC_UNQ_REF'], **data_dict)                 #saving data
+            return render(request, "paytm/response.html", {"paytm":data_dict, 'user': user})
         else:
             return HttpResponse("checksum verify failed")
     return HttpResponse(status=200)

@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"/home/jetso/Downloads/paytm-django-master/payments/env"
+$VIRTUAL_ENV = r"/home/jetso/Downloads/paytm_django-master/env"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]
