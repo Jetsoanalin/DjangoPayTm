@@ -130,7 +130,7 @@ PAYTM_WEBSITE = 'DEFAULT'
 PAYTM_URL = 'https://securegw.paytm.in/theia/processTransaction'
 # HOST_URL = 'http://127.0.0.1:8000/'
 # Heroku Config
-HOST_URL = 'https://djangopaytm.herokuapp.com'
+HOST_URL = 'https://djangopaytm.herokuapp.com/'
 PAYTM_CALLBACK_URL = "response/"
 
 if DEBUG:
