@@ -1,1 +1,1 @@
-web: gunicorn payments.wsgi --log-file -
+web: gunicorn paytm_django.wsgi --log-file -
